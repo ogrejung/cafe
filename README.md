@@ -1,4 +1,4 @@
-# GroupPurchase
+# cafe(Group Purchase)
 공동구매(Group Purchaes)
  1. 구매상품관리
    - 공동구매상품등록(상품명, 제고수량, 공동구매조건(수량),상태(판매중) 등록
