@@ -1,0 +1,228 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cafeProduct
+  labels:
+    app: cafeProduct
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cafeProduct
+  template:
+    metadata:
+      labels:
+        app: cafeProduct
+    spec:
+      containers:
+        - name: cafeProduct
+          image: username/cafeProduct:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cafeOrder
+  labels:
+    app: cafeOrder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cafeOrder
+  template:
+    metadata:
+      labels:
+        app: cafeOrder
+    spec:
+      containers:
+        - name: cafeOrder
+          image: username/cafeOrder:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cafePay
+  labels:
+    app: cafePay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cafePay
+  template:
+    metadata:
+      labels:
+        app: cafePay
+    spec:
+      containers:
+        - name: cafePay
+          image: username/cafePay:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cafeDelivery
+  labels:
+    app: cafeDelivery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cafeDelivery
+  template:
+    metadata:
+      labels:
+        app: cafeDelivery
+    spec:
+      containers:
+        - name: cafeDelivery
+          image: username/cafeDelivery:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cafeProduct
+  labels:
+    app: cafeProduct
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: cafeProduct
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cafeOrder
+  labels:
+    app: cafeOrder
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: cafeOrder
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cafePay
+  labels:
+    app: cafePay
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: cafePay
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cafeDelivery
+  labels:
+    app: cafeDelivery
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: cafeDelivery
+

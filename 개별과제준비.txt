@@ -1,0 +1,61 @@
+* kafka 기동 
+
+1. zookeeper 기동 
+d:\kafka\kafka_2.13-2.8.0\bin\windows\zookeeper-server-start.bat d:\kafka\kafka_2.13-2.8.0\config\zookeeper.properties
+
+2. kafka 기동 
+d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-server-start.bat d:\kafka\kafka_2.13-2.8.0\config\server.properties
+
+3. Topic 확인 
+d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-topics.bat --list --zookeeper localhost:2181
+ 
+4. Topic 생성 
+d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic cafe
+
+5. Message 
+  - Producer (메시지 입력 창으로 변경됨)
+   d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic cafe
+  
+  - Consumer ( Producer 입력 내용 수신자 )
+   d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic cafe --from-beginning 
+==============================================================================================================
+* 상품등록 
+http http://localhost:8080/products productName=AAA stock=10 conditionQty=5 orderQty=0 productStatus="판매중" sumOrderQty=0
+
+http http://localhost:8080/products productName=BBB stock=12 conditionQty=3 orderQty=0 productStatus="판매중" sumOrderQty=0
+
+* 주문 등록 
+http http://localhost:8080/orders productId=1 produtName=AAA qty=1
+
+* 결제 등록 
+http http://localhost:8080/pays orderId=1 productId=3 productName=bbb qty=10
+===============================================================================================================
+* 참고용 자료 
+* 2조 과제 - 동물병원 진료시스템 구축 : https://github.com/msa-ez/example-animal-hospital
+* 꽃 배달 서비스 ( 3조 리포트 ) : https://github.com/msa-ez/flowerdelivery
+
+ 
+주제 : 
+
+카페직거래
+ 1. 판매자 직거래 상품 등록 
+   - 판매상품등록(상품명, 제고수량, 판매조건(수량), 상태(판매중) 등록
+   - 판매 상품 변경/삭제
+     . 상품정보 삭제(상태변경) 
+	 . 주문에 있는 productId 상품 주문된 것 취소 (Sync call)
+	 . 결제된 주문 내역 취소 
+ 2. 구매 신청
+   - 상품상태 체크 판매중인 상품만 주문 가능
+   - 주문된 상품 결제(Sync)
+   - 결제 완료된 상품 판매자 알림    
+ 3. 구매 취소  
+   - 주무 내역 취소 처리 
+   - 결제 내역 취소 처리(Sync Call)
+   - 취소 내역 판매자에게 알림    
+ 
+=======[Local 환경]===========================
+ - gateway : : http://loclahost:8080
+ - cafeProduct : http://loclahost:8081
+ - cafeOrder : http://loclahost:8082
+ - cafePay : : http://loclahost:8083
+=============================================

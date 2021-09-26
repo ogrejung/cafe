@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: cafeProduct
+          uri: http://localhost:8081
+          predicates:
+            - Path=/products/** 
+        - id: cafeOrder
+          uri: http://localhost:8082
+          predicates:
+            - Path=/orders/** 
+        - id: cafePay
+          uri: http://localhost:8083
+          predicates:
+            - Path=/pays/** 
+        - id: cafeDelivery
+          uri: http://localhost:8084
+          predicates:
+            - Path=/deliveries/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: cafeProduct
+          uri: http://cafeProduct:8080
+          predicates:
+            - Path=/products/** 
+        - id: cafeOrder
+          uri: http://cafeOrder:8080
+          predicates:
+            - Path=/orders/** 
+        - id: cafePay
+          uri: http://cafePay:8080
+          predicates:
+            - Path=/pays/** 
+        - id: cafeDelivery
+          uri: http://cafeDelivery:8080
+          predicates:
+            - Path=/deliveries/** 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
