@@ -19,7 +19,6 @@ public class Order {
     private Long productId;
     private String productName;
     private Integer qty;
-//    @ColumnDefault("'Ordered'")
     private String orderStatus;
 
     // 주문전 상품의 상태 확인
@@ -29,7 +28,7 @@ public class Order {
         String productStatus = CafeOrderApplication.applicationContext.getBean(cafe.external.ProductService.class)
                 .checkProductStatus(this.getProductId());
         
-        if(productStatus.equals("판매중")) {
+        if( productStatus.equals("판매중") ) {
         	this.setOrderStatus("ordered");
         } else {
         	throw new Exception("판매중인 상품이 아닙니다.");
@@ -57,27 +56,20 @@ public class Order {
                 throw new RuntimeException("결제서비스 호출 실패입니다.");
             }
             
+            
     	}
     	
     	
     	OrderPlaced orderPlaced = new OrderPlaced();
         BeanUtils.copyProperties(this, orderPlaced);
+        orderPlaced.setProductName(this.getProductName());
+        
+        System.out.println("##### orderPlaced Check [ProductName] : " + getProductName()+ "\n\n");
+        System.out.println();
+        
         orderPlaced.publishAfterCommit();
         
-        // 상품에 주문 정보 갱신
-        {
-        	cafe.external.Product product = new cafe.external.Product();
-        	product.setId(getProductId());
-        	product.setOrderQty(Long.valueOf(getQty()));
-    		
-            // mappings goes here
-            try {
-            	CafeOrderApplication.applicationContext.getBean(cafe.external.ProductService.class)
-                        .product(product);
-            }catch(Exception e) {
-                throw new RuntimeException("상품서비스 호출 실패입니다.");
-            }	
-        }
+
 
     }
     
@@ -95,9 +87,9 @@ public class Order {
         // mappings goes here
         //Application.applicationContext.getBean(cafe.external.PayService.class).orderRefund(pay);
         
-        DeliveryStarted deliveryStarted = new DeliveryStarted();
-        BeanUtils.copyProperties(this, deliveryStarted);
-        deliveryStarted.publishAfterCommit();
+//        DeliveryStarted deliveryStarted = new DeliveryStarted();
+//        BeanUtils.copyProperties(this, deliveryStarted);
+//        deliveryStarted.publishAfterCommit();
 
     }
 

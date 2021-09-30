@@ -38,4 +38,31 @@ import java.util.List;
              return product.getProductStatus();
      }
 
+     @RequestMapping(value = "/products/updateProductOrderQty", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
+     public Long updateProductOrderQty(@RequestParam("productId") Long productId, Integer qty) throws Exception {
+             System.out.println("##### /product/checkProductStatus  called #####");
+
+             Optional<Product> productOptional = productRepository.findById(productId);
+             Product product = productOptional.get();
+             
+             product.setOrderQty(product.getOrderQty() + qty);
+             System.out.println("##### /product/updateProductOrderQty ==> Order qTY = " + qty);
+             System.out.println("##### /product/updateProductOrderQty ==> Product Order SumQty = " + product.getOrderQty());
+             
+
+//             if (product.getPrice() > 0) {
+//                     price = product.getPrice();
+//             }
+
+             //임의의 부하를 위한 강제 설정
+//             try {
+//                     Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+//             } catch (InterruptedException e) {
+//                     e.printStackTrace();
+//             }
+
+             return product.getOrderQty();
+     }
+     
+     
  }

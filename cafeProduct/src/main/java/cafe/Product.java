@@ -18,6 +18,8 @@ public class Product {
     private Long orderQty;
     private String productStatus;
     private Long sumOrderQty;
+    private Long orderId;
+    
 
     @PostPersist
     public void onPostPersist(){
@@ -37,9 +39,28 @@ public class Product {
     
     @PostUpdate
     public void onPostUpdate(){
-        ProductDeleted productDeleted = new ProductDeleted();
-        BeanUtils.copyProperties(this, productDeleted);
-        productDeleted.publishAfterCommit();
+                
+    	if (this.getProductStatus().equals("판매중")) {
+    		
+	    	// 배송쪽 Kafka 메시지 전달 
+	        DeliveryStarted deliveryStarted = new DeliveryStarted();
+	        
+	        System.out.println("##### Product 입력받은 값  [this.getId()]: "+ this.getId()    );     
+	        System.out.println("##### Product 입력받은 값  [this.getOrderId()]: "+ this.getOrderId()    );     
+	        System.out.println("##### Product 입력받은 값  [this.getOrderQty()]: "+ this.getOrderQty()    );   	        
+	        
+	        BeanUtils.copyProperties(this, deliveryStarted);
+	        deliveryStarted.setProductId(this.getId());
+	        deliveryStarted.setQty(Integer.parseInt(String.valueOf(this.getOrderQty())));
+	        deliveryStarted.publishAfterCommit();
+
+	        System.out.println("##### Kafka 입력 완료 ~~~ [deliveryStarted]");        
+	    }
+        
+    	
+//    	ProductDeleted productDeleted = new ProductDeleted();
+//        BeanUtils.copyProperties(this, productDeleted);
+//        productDeleted.publishAfterCommit();
 
         //Following code causes dependency to external APIs
         // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
@@ -105,7 +126,13 @@ public class Product {
         this.sumOrderQty = sumOrderQty;
     }
 
+    public Long getOrderId() {
+        return orderId;
+    }
 
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
 
 }

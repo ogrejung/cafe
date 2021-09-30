@@ -11,12 +11,12 @@ public class Delivery {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long Id;
+    private Long id;
     private Long orderId;
     private Long productId;
     private String productName;
     private Integer qty;
-    private Integer deliveryStatus;
+    private String deliveryStatus;
 
     @PostPersist
     public void onPostPersist(){
@@ -26,12 +26,12 @@ public class Delivery {
 
     }
 
-    public Long getDeliveryId() {
-        return deliveryId;
+    public Long getId() {
+        return id;
     }
 
-    public void setDeliveryId(Long deliveryId) {
-        this.deliveryId = deliveryId;
+    public void setId(Long id) {
+        this.id = id;
     }
     public Long getOrderId() {
         return orderId;
@@ -61,11 +61,11 @@ public class Delivery {
     public void setQty(Integer qty) {
         this.qty = qty;
     }
-    public Integer getDeliveryStatus() {
+    public String getDeliveryStatus() {
         return deliveryStatus;
     }
 
-    public void setDeliveryStatus(Integer deliveryStatus) {
+    public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
     }
 

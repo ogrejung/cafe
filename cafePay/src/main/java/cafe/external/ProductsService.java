@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Date;
 
 @FeignClient(name = "product", url = "${feign.client.url.productUrl}")
-public interface ProductService {
-	
-    @RequestMapping(method= RequestMethod.GET, path="/products/checkProductStatus")
-    public String checkProductStatus(@RequestParam("productId") Long productId);
-  
+public interface ProductsService {
+    @RequestMapping(method= RequestMethod.PATCH, path="/products/updateProductOrderQty")
+    public Long updateProductOrderQty(@RequestParam("productId") Long productId, Integer orderQty);
+    
 }

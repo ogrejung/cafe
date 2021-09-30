@@ -23,8 +23,9 @@ public class Pay {
         OrderPaid orderPaid = new OrderPaid();
         BeanUtils.copyProperties(this, orderPaid);
         orderPaid.publishAfterCommit();
-
+        
     }
+    
     @PostUpdate
     public void onPostUpdate(){
         OrderRefund orderRefund = new OrderRefund();
