@@ -22,7 +22,9 @@ d:\kafka\kafka_2.13-2.8.0\bin\windows\kafka-topics.bat --create --zookeeper loca
 * 상품등록 
 http http://localhost:8080/products productName=AAA stock=10 conditionQty=5 orderQty=0 productStatus="판매중" sumOrderQty=0
 
-http http://localhost:8080/products productName=BBB stock=12 conditionQty=3 orderQty=0 productStatus="판매중" sumOrderQty=0
+http http://localhost:8080/products productName=BBB stock=5 conditionQty=3 orderQty=0 productStatus="판매중" sumOrderQty=0
+
+http http://localhost:8080/products productName=CCC stock=4 conditionQty=2 orderQty=0 productStatus="픔절" sumOrderQty=0
 
 * 주문 등록 
 http http://localhost:8080/orders productId=1 produtName=AAA qty=1
@@ -59,3 +61,111 @@ http http://localhost:8080/pays orderId=1 productId=3 productName=bbb qty=10
  - cafeOrder : http://loclahost:8082
  - cafePay : : http://loclahost:8083
 =============================================
+
+
+1. 결과물 작성은 리포트 형태 
+2. 금요일 3시 30분까지 평가 요청 필요 
+3. 
+
+msaschool.io  >> 구현단계 마지막 이벤트 기반 메시지 채널 카프카 설치시 참조 
+ ==> 클러스터 환경에서 토픽을 생성하여 해당 토픽에서 메세지를 pub/sub 해보기
+운영단계 실습 스크립트 ==> AWS Cloud 기반의 Container Orchestration Lab. Scripts
+
+
+정승식	user18	SKCC!234	
+
+
+
+Helm 참조 : https://helm.sh/docs/topics/version_skew/
+
+* pipeline 시 장애시 해결 방안  
+too many reqeusts ~~....
+FROM ghcr.io/gkedu/openjdk:~~~
+
+curcuit breaker .....
+
+HPA : AWS 메트릭스 서버 필수
+      
+
+무정지배포 : 다운타임 없이 배포됨 증빙 필요 
+시벼 자운타임 없음 
+
+라이브니스 프로브 : 리스타트 카운트 증가 증적 필요 
+
+컴피그맵 : 생성 + 마이크로 서비스가 사용하는 증적 필요 
+         
+폴리그랏 : 렝귀지 또는 저장소 다양화 
+
+
+      user18 
+	  region : ap-southeast-2
+	  accse 키 : AKIA4ZVUN62GTG3MBR4Z
+	  비밀 억세스 키 : sF5vN7+sfgVZkB0nzrawxTHPGe3o8aDGn8fese8Y
+	  
+* Cloud Configuration	  
+ > aws configure
+ 	  accse 키 : AKIA4ZVUN62GTG3MBR4Z
+	  비밀 억세스 키 : sF5vN7+sfgVZkB0nzrawxTHPGe3o8aDGn8fese8Y
+	  region : ap-southeast-2
+
+* AWS 클러스터 생성
+>>> eksctl create cluster --name (Cluster-Name) --version 1.19 --nodegroup-name standard-workers --node-type t3.medium --nodes 4 --nodes-min 1 --nodes-max 4
+> eksctl create cluster --name user18-eks --version 1.19 --nodegroup-name standard-workers --node-type t3.medium --nodes 4 --nodes-min 1 --nodes-max 4
+
+>>>
+
+* AWS 클러스터 토큰 가져오기
+>>> aws eks --region (Region-Code) update-kubeconfig --name (Cluster-Name)
+> aws eks --region ap-southeast-2 update-kubeconfig --name user18-eks
+
+* AWS 컨테이너 레지스트리에 이미지 리파지토리 생성
+>>> aws ecr create-repository --repository-name (Image-Repository-Name) --image-scanning-configuration scanOnPush=true --region (Region-Code)
+> aws ecr create-repository --repository-name user18-brokerage --image-scanning-configuration scanOnPush=true --region ap-southeast-2
+
+{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:ap-southeast-2:879772956301:repository/user18-brokerage",
+        "registryId": "879772956301",
+        "repositoryName": "user18-brokerage",
+        "repositoryUri": "879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/user18-brokerage",
+        "createdAt": "2021-09-30T01:38:23+00:00",
+        "imageTagMutability": "MUTABLE",
+        "imageScanningConfiguration": {
+            "scanOnPush": true
+        },
+        "encryptionConfiguration": {
+            "encryptionType": "AES256"
+        }
+    }
+}
+
+* AWS 컨테이너 레지스트리 로그인
+>>> aws ecr get-login-password --region (Region-Code) | docker login --username AWS --password-stdin (Account-Id).dkr.ecr.(Region-Code).amazonaws.com
+
+> aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com
+
+AWS 컨테이너 레지스트리 로그인 - 오류발생시 명령어임
+12시간 후 자동 logoff 됨 아침에 다음날 접속시에 호출하자.
+docker login --username AWS -p $(aws ecr get-login-password --region ap-southeast-2) 879772956301.dkr.ecr.ap-southeast-2.amazonaws.com/
+
+
+> kubectl config current-context
+
+* AWS EKS 모니터링
+ - Metric-Server 설치
+>>> kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.0/components.yaml
+
+## AWS 레지스트리에 도커 이미지 푸시하기
+>>> aws ecr create-repository --repository-name (IMAGE_NAME) --region ap-northeast-2
+>>> docker push 283210891307.dkr.ecr.ap-northeast-2.amazonaws.com/(IMAGE_NAME):latest
+
+
+
+EFS 사용하기 (EKS)
+1. EFS 생성
+2. EFS 계정 생성 및 Role 바인딩
+3. EFS Provisioner 설치 
+4. StorageClass 생성 
+5. PVC 생성 
+
+파일 시스템 ID(EFS ID) : fs-1f392527

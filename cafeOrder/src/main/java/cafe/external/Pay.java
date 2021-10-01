@@ -8,6 +8,7 @@ public class Pay {
     private String productName;
     private Integer qty;
     private String payStatus;
+    private String orderStatus;
     
     public Long getPayId() {
         return payId;
@@ -44,5 +45,11 @@ public class Pay {
     }
     public void setPayStatus(String payStatus) {
         this.payStatus = payStatus;
+    }
+    public String getOrderStatus() {
+        return this.orderStatus;
+    }
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

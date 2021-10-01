@@ -22,6 +22,7 @@ public class Delivery {
     public void onPostPersist(){
         ShippingStarted shippingStarted = new ShippingStarted();
         BeanUtils.copyProperties(this, shippingStarted);
+        shippingStarted.setDeliveryStatus("배송중");
         shippingStarted.publishAfterCommit();
 
     }

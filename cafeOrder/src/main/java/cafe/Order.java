@@ -43,10 +43,12 @@ public class Order {
     	// 주문시 결제까지 트랜잭션을 통합을 위해 결제 서비스 직접 호출
     	{
     		cafe.external.Pay pay = new cafe.external.Pay();
-    		pay.setOrderId(getId());
-    		pay.setProductId(getProductId());
-    		pay.setProductName(getProductName());
-    		pay.setQty(getQty());
+    		
+    		pay.setOrderId(this.getId());
+    		pay.setProductId(this.getProductId());
+    		pay.setProductName(this.getProductName());
+    		pay.setQty(this.getQty());
+    		pay.setOrderStatus(this.getOrderStatus());
     		
             // mappings goes here
             try {
@@ -64,7 +66,7 @@ public class Order {
         BeanUtils.copyProperties(this, orderPlaced);
         orderPlaced.setProductName(this.getProductName());
         
-        System.out.println("##### orderPlaced Check [ProductName] : " + getProductName()+ "\n\n");
+        System.out.println("##### orderPlaced Check [ProductName] : " + this.getProductName()+ "\n\n");
         System.out.println();
         
         orderPlaced.publishAfterCommit();

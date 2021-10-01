@@ -2,8 +2,10 @@ package cafe;
 
 import javax.persistence.*;
 import org.springframework.beans.BeanUtils;
+import java.util.Optional;
 import java.util.List;
 import java.util.Date;
+
 
 @Entity
 @Table(name="Pay_table")
@@ -17,22 +19,41 @@ public class Pay {
     private String productName;
     private Integer qty;
     private String payStatus;
+    private String orderStatus;
 
+    // 주문 상태 지정
+    @PrePersist
+    public void onPrePersist() throws Exception {
+    	
+        System.out.println(this.getClass().getName()+" : onPrePersist   -----------------start------------------");
+        System.out.println("주문상태 : "+orderStatus);	
+        
+    	if("주문취소".equals(orderStatus)) {
+            OrderRefund orderRefund = new OrderRefund();
+            BeanUtils.copyProperties(this, orderRefund);
+            orderRefund.publishAfterCommit();
+            
+    	} else {
+    		this.setPayStatus("orderPaid");
+    	}
+    	
+    }
+    
     @PostPersist
     public void onPostPersist(){
         OrderPaid orderPaid = new OrderPaid();
         BeanUtils.copyProperties(this, orderPaid);
+        orderPaid.setPayStatus(payStatus);
         orderPaid.publishAfterCommit();
         
     }
     
-    @PostUpdate
-    public void onPostUpdate(){
-        OrderRefund orderRefund = new OrderRefund();
-        BeanUtils.copyProperties(this, orderRefund);
-        orderRefund.publishAfterCommit();
-
-    }
+//    @PostUpdate
+//    public void onPostUpdate(){
+//    	// 환불인 경우 실행 
+//
+//
+//    }
 
     public Long getId() {
         return id;
@@ -78,5 +99,11 @@ public class Pay {
         this.payStatus = payStatus;
     }
 
+    public String getOrderStatus() {
+        return this.orderStatus;
+    }
 
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

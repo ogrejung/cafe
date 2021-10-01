@@ -7,7 +7,7 @@ public class ShippingStarted extends AbstractEvent {
     private Long productId;
     private String productName;
     private Integer qty;
-    private Integer deliveryStatus;
+    private String deliveryStatus;
 
     public ShippingStarted(){
         super();
@@ -48,11 +48,11 @@ public class ShippingStarted extends AbstractEvent {
     public void setQty(Integer qty) {
         this.qty = qty;
     }
-    public Integer getDeliveryStatus() {
+    public String getDeliveryStatus() {
         return deliveryStatus;
     }
 
-    public void setDeliveryStatus(Integer deliveryStatus) {
+    public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
     }
 }

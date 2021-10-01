@@ -6,6 +6,7 @@ public class OrderPaid extends AbstractEvent {
     private Long orderId;
     private Long productId;
     private Integer qty;
+    private String payStatus;
 
     public OrderPaid(){
         super();
@@ -38,5 +39,13 @@ public class OrderPaid extends AbstractEvent {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
     }
 }

@@ -51,6 +51,7 @@ public class Product {
 	        
 	        BeanUtils.copyProperties(this, deliveryStarted);
 	        deliveryStarted.setProductId(this.getId());
+	        deliveryStarted.setOrderStatus("orderPaid");
 	        deliveryStarted.setQty(Integer.parseInt(String.valueOf(this.getOrderQty())));
 	        deliveryStarted.publishAfterCommit();
 
